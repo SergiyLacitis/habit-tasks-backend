@@ -10,7 +10,7 @@ def index():
 
 
 def main():
-    uvicorn.run("main:app", reload=True)
+    uvicorn.run("src.main:app", reload=True)
 
 
 if __name__ == "__main__":

@@ -7,6 +7,8 @@ requires-python = ">=3.12"
 dependencies = [
     "fastapi>=0.115.12",
     "pyright>=1.1.401",
+    "pytest>=8.3.5",
+    "ruff>=0.11.11",
     "uvicorn>=0.34.2",
 ]
 
@@ -14,3 +16,6 @@ dependencies = [
 include = ["src", "tests"]
 venvPath = "."
 venv = ".venv"
+
+[tool.ruff.lint]
+extend-select = ["FAST001", "FAST002", "FAST003"]
