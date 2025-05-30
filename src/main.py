@@ -3,8 +3,6 @@ from fastapi import FastAPI
 
 app = FastAPI()
 
-something
-
 
 @app.get("/index")
 def index():
