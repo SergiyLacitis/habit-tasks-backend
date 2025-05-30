@@ -3,11 +3,11 @@ from fastapi import FastAPI
 
 app = FastAPI()
 
+something
+
 
 @app.get("/index")
 def index():
-
-somthing other
     return {"text": "Hello, world!"}
 
 
