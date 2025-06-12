@@ -13,7 +13,8 @@ def main():
         "src.main:app",
         host=settings.networking.host,
         port=settings.networking.port,
-        reload=True,
+        reload=settings.debug,
+        log_level="debug" if settings.debug else "info",
     )
 
 
