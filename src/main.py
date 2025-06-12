@@ -1,6 +1,11 @@
 import uvicorn
+from fastapi import FastAPI
 
-from config import settings
+from .config import settings
+from .routers import users
+
+app = FastAPI()
+app.include_router(users.router, prefix="/users", tags=["Users"])
 
 
 def main():
