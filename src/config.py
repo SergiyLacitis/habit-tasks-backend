@@ -9,6 +9,7 @@ class Networking(BaseModel):
 
 class Settings(BaseSettings):
     networking: Networking = Networking()
+    debug: bool = True
 
 
 settings = Settings()
