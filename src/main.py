@@ -1,15 +1,15 @@
 import uvicorn
 
-app = FastAPI()
-
-
-@app.get("/index")
-def index():
-    return {"text": "Hello, world!"}
+from config import settings
 
 
 def main():
-    uvicorn.run("src.main:app", reload=True)
+    uvicorn.run(
+        "src.main:app",
+        host=settings.networking.host,
+        port=settings.networking.port,
+        reload=True,
+    )
 
 
 if __name__ == "__main__":
