@@ -1,6 +1,3 @@
-from fastapi import FastAPI
+from . import config, routers
 
-from routers import users
-
-app = FastAPI()
-app.include_router(users.router, prefix="/users", tags=["Users"])
+__all__ = ["config", "routers"]
