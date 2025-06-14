@@ -11,10 +11,9 @@ app.include_router(users.router, prefix="/users", tags=["Users"])
 def main():
     uvicorn.run(
         "main:app",
-        host=settings.networking.host,
-        port=settings.networking.port,
-        reload=settings.debug,
-        log_level="debug" if settings.debug else "info",
+        reload=settings.app.reload,
+        host=settings.app.host,
+        port=settings.app.port,
     )
 
 
