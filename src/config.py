@@ -29,7 +29,7 @@ class DatabaseConfig(BaseModel):
 class Settings(BaseSettings):
     app: AppConfig
     database: DatabaseConfig
-    model_config = SettingsConfigDict(toml_file=("src/config.toml"))
+    model_config = SettingsConfigDict(toml_file=("config.toml"))
 
     @classmethod
     def settings_customise_sources(
