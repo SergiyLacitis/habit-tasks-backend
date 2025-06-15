@@ -1,11 +1,14 @@
 from typing import AsyncGenerator
 
+from sqlalchemy import URL
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
     AsyncSession,
     async_sessionmaker,
     create_async_engine,
 )
+
+from config import settings
 
 
 class DatabaseHelper:
@@ -39,4 +42,13 @@ class DatabaseHelper:
             yield session
 
 
-database_helper = DatabaseHelper
+url = URL.create(
+    drivername=f"{settings.database.engine}+asyncpg",
+    username=settings.database.user,
+    password=settings.database.password,
+    host=settings.database.host,
+    port=settings.database.port,
+    database=settings.database.name,
+).render_as_string(hide_password=False)
+
+database_helper = DatabaseHelper(url=url)
