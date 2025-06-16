@@ -15,10 +15,10 @@ class DatabaseHelper:
     def __init__(
         self,
         url: str,
-        echo: bool = False,
-        echo_pool: bool = False,
-        pool_size: int = 5,
-        max_overflow: int = 10,
+        echo: bool,
+        echo_pool: bool,
+        pool_size: int,
+        max_overflow: int,
     ) -> None:
         self.engine: AsyncEngine = create_async_engine(
             url=url,
@@ -43,7 +43,7 @@ class DatabaseHelper:
 
 
 url = URL.create(
-    drivername=f"{settings.database.engine}+asyncpg",
+    drivername=f"{settings.database.engine.name}+asyncpg",
     username=settings.database.user,
     password=settings.database.password,
     host=settings.database.host,
@@ -51,4 +51,10 @@ url = URL.create(
     database=settings.database.name,
 ).render_as_string(hide_password=False)
 
-database_helper = DatabaseHelper(url=url)
+database_helper = DatabaseHelper(
+    url=url,
+    echo=settings.database.engine.echo,
+    echo_pool=settings.database.engine.echo_pool,
+    pool_size=settings.database.engine.pool_size,
+    max_overflow=settings.database.engine.max_overflow,
+)
