@@ -2,9 +2,10 @@ from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
 
 from .base import Base
+from .mixins import IntIDPkMixin
 
 
-class Friend(Base):
+class Friend(Base, IntIDPkMixin):
     name: Mapped[str]
     birdthDay: Mapped[str]
     is_favority: Mapped[bool] = mapped_column(default=False)
