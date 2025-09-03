@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from pydantic import BaseModel, Field
 from pydantic_settings import (
     BaseSettings,
@@ -6,11 +8,20 @@ from pydantic_settings import (
     TomlConfigSettingsSource,
 )
 
+BASE_DIR = Path(__file__).parent.parent
+
 
 class AppSettings(BaseModel):
     reload: bool = False
     host: str = "localhost"
     port: int = 8000
+
+
+class AuthSettings(BaseModel):
+    secret_key_path: Path = BASE_DIR / "certs" / "jwt" / "private.pem"
+    public_key_path: Path = BASE_DIR / "certs" / "jwt" / "public.pem"
+    algorithm: str = "RS256"
+    access_token_expire_minutes: int = 15
 
 
 class DatabseEngineSettings(BaseModel):
@@ -44,6 +55,7 @@ class DatabaseSettings(BaseModel):
 class Settings(BaseSettings):
     app: AppSettings
     database: DatabaseSettings
+    auth: AuthSettings
     model_config = SettingsConfigDict(
         toml_file=["config.toml"],
     )
