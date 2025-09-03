@@ -5,7 +5,7 @@ from fastapi import Depends
 from fastapi.routing import APIRouter
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from crud import UsersCRUD
+import crud
 from database import database_helper
 from database.models.user import User
 from schemas.user import UserCreate, UserRead
@@ -17,7 +17,7 @@ router = APIRouter(prefix="/users", tags=["Users"])
 async def get_users(
     session: Annotated[AsyncSession, Depends(database_helper.session_getter)],
 ) -> Sequence[User]:
-    users = await UsersCRUD.get_all(session=session)
+    users = await crud.users.get_all(session=session)
     return users
 
 
@@ -25,7 +25,7 @@ async def get_users(
 async def get_user(
     session: Annotated[AsyncSession, Depends(database_helper.session_getter)], id: int
 ) -> User:
-    user = await UsersCRUD.get(session=session, id=id)
+    user = await crud.users.get(session=session, id=id)
     return user
 
 
@@ -34,5 +34,5 @@ async def create_user(
     session: Annotated[AsyncSession, Depends(database_helper.session_getter)],
     user_create: UserCreate,
 ) -> User:
-    user = await UsersCRUD.create(session=session, user_create=user_create)
+    user = await crud.users.create(session=session, user_create=user_create)
     return user
