@@ -9,4 +9,8 @@ wheels/
 # Virtual environments
 .venv
 
+# Settings
 config.toml
+
+# Keys
+certs/
