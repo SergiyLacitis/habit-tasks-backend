@@ -23,8 +23,3 @@ venv = ".venv"
 
 [tool.ruff.lint]
 extend-select = ["FAST001", "FAST002", "FAST003"]
-
-[tool.uv.workspace]
-members = [
-    "src",
-]
