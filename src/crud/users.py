@@ -1,6 +1,6 @@
 from collections.abc import Sequence
 
-from fastapi import HTTPException
+from fastapi import HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -9,10 +9,9 @@ from schemas.user import UserCreate
 
 
 async def get(session: AsyncSession, id: int) -> User:
-    user = await session.get(User, id)
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    return user
+    if user := await session.get(User, id):
+        return user
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
 
 
 async def get_all(session: AsyncSession) -> Sequence[User]:

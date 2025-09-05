@@ -5,7 +5,7 @@ from fastapi import FastAPI
 
 from config import settings
 from database import database_helper
-from routers import users
+from routers import auth, users
 
 
 @asynccontextmanager
@@ -15,7 +15,9 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
-app.include_router(users.router)
+
+for router in (users.router, auth.router):
+    app.include_router(router)
 
 
 def main():

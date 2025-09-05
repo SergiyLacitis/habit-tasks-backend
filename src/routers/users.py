@@ -21,14 +21,6 @@ async def get_users(
     return users
 
 
-@router.get("/{id}", response_model=UserRead)
-async def get_user(
-    session: Annotated[AsyncSession, Depends(database_helper.session_getter)], id: int
-) -> User:
-    user = await crud.users.get(session=session, id=id)
-    return user
-
-
 @router.post("/", response_model=UserRead)
 async def create_user(
     session: Annotated[AsyncSession, Depends(database_helper.session_getter)],

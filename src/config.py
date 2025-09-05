@@ -8,7 +8,7 @@ from pydantic_settings import (
     TomlConfigSettingsSource,
 )
 
-BASE_DIR = Path(__file__).parent.parent
+BASE_DIR = Path(__file__).parent
 
 
 class AppSettings(BaseModel):
@@ -18,8 +18,8 @@ class AppSettings(BaseModel):
 
 
 class AuthSettings(BaseModel):
-    secret_key_path: Path = BASE_DIR / "certs" / "jwt" / "private.pem"
-    public_key_path: Path = BASE_DIR / "certs" / "jwt" / "public.pem"
+    secret_key_path: str = (BASE_DIR / "certs" / "jwt" / "private.pem").read_text()
+    public_key_path: str = (BASE_DIR / "certs" / "jwt" / "public.pem").read_text()
     algorithm: str = "RS256"
     access_token_expire_minutes: int = 15
 
@@ -55,9 +55,9 @@ class DatabaseSettings(BaseModel):
 class Settings(BaseSettings):
     app: AppSettings
     database: DatabaseSettings
-    auth: AuthSettings
+    auth: AuthSettings = Field(default_factory=AuthSettings)
     model_config = SettingsConfigDict(
-        toml_file=["config.toml"],
+        toml_file=BASE_DIR / "config.toml",
     )
 
     @classmethod
