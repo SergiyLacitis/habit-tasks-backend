@@ -1,23 +1,21 @@
+from collections.abc import Sequence
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi import Depends, HTTPException, status
+from fastapi.routing import APIRouter
+from fastapi.security import OAuth2PasswordBearer
 from jwt.exceptions import InvalidTokenError
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+import crud
 import utils
 from config import settings
 from database import database_helper
-from database.models import User
-from schemas.jwt import TokenInfo
-from schemas.user import UserRead
+from database.models.user import User
+from schemas.user import UserCreate, UserRead
 
-router = APIRouter(prefix="/auth", tags=["Authentication"])
-
-unauthorized_exeption = HTTPException(
-    status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid username or password"
-)
+router = APIRouter(prefix="/users", tags=["Users"])
 
 oauth2_bearer = OAuth2PasswordBearer(
     tokenUrl="/auth/login",
@@ -30,45 +28,21 @@ ivalid_token_exeption = HTTPException(
 )
 
 
-async def validate_user(
-    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
+@router.get("/", response_model=list[UserRead])
+async def get_users(
     session: Annotated[AsyncSession, Depends(database_helper.session_getter)],
+) -> Sequence[User]:
+    users = await crud.users.get_all(session=session)
+    return users
+
+
+@router.post("/", response_model=UserRead)
+async def create_user(
+    session: Annotated[AsyncSession, Depends(database_helper.session_getter)],
+    user_create: UserCreate,
 ) -> User:
-    username = form_data.username
-    password = form_data.password
-    statement = (
-        select(User).where(User.email == username)
-        if "@" in username
-        else select(User).where(User.username == username)
-    )
-    if not (user := (await session.execute(statement)).scalar_one_or_none()):
-        raise unauthorized_exeption
-
-    if utils.auth.validate_password(password=password, hashed_password=user.password):
-        return user
-
-    raise unauthorized_exeption
-
-
-@router.post("/login", response_model=TokenInfo)
-async def login(
-    user: Annotated[User, Depends(validate_user)],
-):
-    payload = {"sub": user.username}
-
-    token = utils.auth.encode_token(
-        payload=payload,
-        private_key=settings.auth.secret_key_path,
-        algorithm=settings.auth.algorithm,
-        expire_minutes=settings.auth.access_token_expire_minutes,
-    )
-    return TokenInfo(access_token=token, token_type="Bearer")
-
-
-@router.post("/register")
-async def register(
-    session: Annotated[AsyncSession, Depends(database_helper.session_getter)],
-): ...
+    user = await crud.users.create(session=session, user_create=user_create)
+    return user
 
 
 def get_current_auth_payload(

@@ -3,9 +3,9 @@ from contextlib import asynccontextmanager
 import uvicorn
 from fastapi import FastAPI
 
+import api
 from config import settings
 from database import database_helper
-from routers import auth, users
 
 
 @asynccontextmanager
@@ -16,8 +16,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
-for router in (users.router, auth.router):
-    app.include_router(router)
+app.include_router(router=api.router)
 
 
 def main():
