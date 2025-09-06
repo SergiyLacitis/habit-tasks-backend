@@ -32,8 +32,6 @@ ivalid_token_exeption = HTTPException(
 
 async def validate_user(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
-    # username: Annotated[str, Form],
-    # password: Annotated[str, Form],
     session: Annotated[AsyncSession, Depends(database_helper.session_getter)],
 ) -> User:
     username = form_data.username
