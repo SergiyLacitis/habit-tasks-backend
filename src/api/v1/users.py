@@ -18,7 +18,7 @@ from schemas.user import UserCreate, UserRead
 router = APIRouter(prefix="/users", tags=["Users"])
 
 oauth2_bearer = OAuth2PasswordBearer(
-    tokenUrl="/auth/login",
+    tokenUrl="/api/v1/auth/login",
 )
 
 ivalid_token_exeption = HTTPException(
