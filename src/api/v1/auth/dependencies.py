@@ -1,17 +1,13 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 import utils
-from config import settings
 from database import database_helper
 from database.models import User
-from schemas.jwt import TokenInfo
-
-router = APIRouter(prefix="/auth", tags=["Authentication"])
 
 unauthorized_exeption = HTTPException(
     status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid username or password"
@@ -36,24 +32,3 @@ async def validate_user(
         return user
 
     raise unauthorized_exeption
-
-
-@router.post("/login", response_model=TokenInfo)
-async def login(
-    user: Annotated[User, Depends(validate_user)],
-):
-    payload = {"sub": user.username}
-
-    token = utils.auth.encode_token(
-        payload=payload,
-        private_key=settings.auth.secret_key_path,
-        algorithm=settings.auth.algorithm,
-        expire_minutes=settings.auth.access_token_expire_minutes,
-    )
-    return TokenInfo(access_token=token, token_type="Bearer")
-
-
-@router.post("/register")
-async def register(
-    session: Annotated[AsyncSession, Depends(database_helper.session_getter)],
-): ...
