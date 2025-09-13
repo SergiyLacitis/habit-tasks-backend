@@ -4,12 +4,16 @@ from datetime import UTC, datetime, timedelta
 import bcrypt
 import jwt
 
+from config import settings
+from database.models import User
+from schemas.jwt import TokenInfo
+
 
 def encode_token(
     payload: dict,
-    private_key: str,
-    algorithm: str,
-    expire_minutes: int,
+    private_key: str = settings.auth.secret_key_path,
+    algorithm: str = settings.auth.algorithm,
+    expire_minutes: int = settings.auth.access_token_expire_minutes,
     expire_timedelta: timedelta | None = None,
 ):
     to_encode = payload.copy()
@@ -33,3 +37,13 @@ def hash_password(password: str):
 
 def validate_password(password: str, hashed_password: bytes) -> bool:
     return bcrypt.checkpw(password.encode("utf-8"), hashed_password)
+
+
+def generate_token(user: User) -> TokenInfo:
+    payload = {"sub": user.username}
+
+    token = encode_token(
+        payload=payload,
+    )
+
+    return TokenInfo(access_token=token, token_type="Bearer")

@@ -1,15 +1,13 @@
 from typing import Annotated
 
 from fastapi import APIRouter, Depends
-from sqlalchemy.ext.asyncio import AsyncSession
 
-import utils
-from config import settings
-from database import database_helper
+from api.v1.users.dependencies import add_user
 from database.models import User
 from schemas.jwt import TokenInfo
 
 from .dependencies import validate_user
+from .utils import generate_token
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
@@ -18,18 +16,9 @@ router = APIRouter(prefix="/auth", tags=["Authentication"])
 async def login(
     user: Annotated[User, Depends(validate_user)],
 ):
-    payload = {"sub": user.username}
-
-    token = utils.auth.encode_token(
-        payload=payload,
-        private_key=settings.auth.secret_key_path,
-        algorithm=settings.auth.algorithm,
-        expire_minutes=settings.auth.access_token_expire_minutes,
-    )
-    return TokenInfo(access_token=token, token_type="Bearer")
+    return generate_token(user)
 
 
-@router.post("/register")
-async def register(
-    session: Annotated[AsyncSession, Depends(database_helper.session_getter)],
-): ...
+@router.post("/register", response_model=TokenInfo)
+async def register(user: Annotated[User, Depends(add_user)]):
+    return generate_token(user)
