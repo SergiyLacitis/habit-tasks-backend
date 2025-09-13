@@ -7,7 +7,7 @@ from database.models import User
 from schemas.jwt import TokenInfo
 
 from .dependencies import validate_user
-from .utils import generate_token
+from .utils import generate_token_info
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
@@ -16,9 +16,9 @@ router = APIRouter(prefix="/auth", tags=["Authentication"])
 async def login(
     user: Annotated[User, Depends(validate_user)],
 ):
-    return generate_token(user)
+    return generate_token_info(user)
 
 
 @router.post("/register", response_model=TokenInfo)
 async def register(user: Annotated[User, Depends(add_user)]):
-    return generate_token(user)
+    return generate_token_info(user)

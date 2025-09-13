@@ -22,6 +22,7 @@ class AuthSettings(BaseModel):
     public_key_path: str = (BASE_DIR / "certs" / "jwt" / "public.pem").read_text()
     algorithm: str = "RS256"
     access_token_expire_minutes: int = 15
+    refresh_token_expire_days: int = 30
 
 
 class DatabseEngineSettings(BaseModel):
