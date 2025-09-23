@@ -41,12 +41,17 @@ async def get_current_auth_user(
     payload: Annotated[dict, Depends(get_current_auth_payload)],
     session: AsyncDBSessionDep,
 ) -> User:
-    username: str | None = payload.get("sub")
-    statement = select(User).where(User.username == username)
-    if user := (await session.execute(statement=statement)).scalar_one_or_none():
-        return user
+    if payload.get("type") == utils.TokenType.ACCESS:
+        username: str | None = payload.get("sub")
+        statement = select(User).where(User.username == username)
+        if user := (await session.execute(statement=statement)).scalar_one_or_none():
+            return user
 
-    raise ivalid_token_exeption
+        raise ivalid_token_exeption
+
+    raise HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED, detail="invalid token type"
+    )
 
 
 async def get_user_by_id(session: AsyncDBSessionDep, id: int) -> User:
@@ -69,8 +74,8 @@ async def add_user(
     user = User(**user_create.model_dump())
     session.add(user)
     try:
-        await session.refresh(user)
         await session.commit()
+        await session.refresh(user)
         return user
     except IntegrityError:
         await session.rollback()
