@@ -13,7 +13,7 @@ BASE_DIR = Path(__file__).parent
 
 class AppSettings(BaseModel):
     reload: bool = False
-    host: str = "localhost"
+    host: str = "0.0.0.0"
     port: int = 8000
 
 
