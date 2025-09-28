@@ -5,8 +5,13 @@ from fastapi import APIRouter, Depends
 from api.v1.users.dependencies import add_user
 from database.models import User
 from schemas.jwt import TokenInfo
+from schemas.user import UserRead
 
-from .dependencies import validate_user
+from .dependencies import (
+    get_auth_user_from_access_token,
+    get_auth_user_from_refresh_token,
+    validate_user,
+)
 from .utils import generate_token_info
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
@@ -22,3 +27,17 @@ async def login(
 @router.post("/register", response_model=TokenInfo)
 async def register(user: Annotated[User, Depends(add_user)]):
     return generate_token_info(user)
+
+
+@router.post("/refresh", response_model=TokenInfo)
+async def refresh(
+    user: Annotated[User, Depends(get_auth_user_from_refresh_token)],
+):
+    return generate_token_info(user)
+
+
+@router.get("/users/me", response_model=UserRead)
+async def get_me(
+    user: Annotated[User, Depends(get_auth_user_from_access_token)],
+) -> User:
+    return user

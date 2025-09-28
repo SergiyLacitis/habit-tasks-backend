@@ -7,7 +7,7 @@ from fastapi.routing import APIRouter
 from database.models.user import User
 from schemas.user import UserRead
 
-from .dependencies import add_user, get_all_users, get_current_auth_user, get_user_by_id
+from .dependencies import add_user, get_all_users, get_user_by_id
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
@@ -30,9 +30,4 @@ async def get_user(
 async def create_user(
     user: Annotated[User, Depends(add_user)],
 ) -> User:
-    return user
-
-
-@router.get("/me", response_model=UserRead)
-async def get_me(user: Annotated[User, Depends(get_current_auth_user)]) -> User:
     return user
