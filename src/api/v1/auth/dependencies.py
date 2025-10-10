@@ -44,7 +44,6 @@ async def get_user_by_identifier(
 ) -> User | None:
     """Get user by identifier (username or email)."""
     if field == "auto":
-        # Automatically determine if this is email or username
         field = "email" if "@" in identifier else "username"
 
     statement = select(User).where(getattr(User, field) == identifier)

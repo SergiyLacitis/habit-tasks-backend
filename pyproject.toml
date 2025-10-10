@@ -1,5 +1,5 @@
 [project]
-name = "med-api"
+name = "habit-tasks-backend"
 version = "0.1.0"
 description = "Backend for some project"
 readme = "README.md"
