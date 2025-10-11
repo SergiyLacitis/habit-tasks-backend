@@ -9,7 +9,7 @@ from sqlalchemy.ext.asyncio import (
     create_async_engine,
 )
 
-from config import settings
+from habit_tasks.config import settings
 
 
 class DatabaseHelper:

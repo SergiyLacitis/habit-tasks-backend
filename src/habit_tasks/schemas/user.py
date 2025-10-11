@@ -3,7 +3,7 @@ from typing import Annotated
 from annotated_types import MaxLen, MinLen
 from pydantic import BaseModel, ConfigDict, EmailStr, field_serializer
 
-from api.v1.auth.utils import hash_password
+from habit_tasks.api.v1.auth.utils import hash_password
 
 
 class UserLogin(BaseModel):

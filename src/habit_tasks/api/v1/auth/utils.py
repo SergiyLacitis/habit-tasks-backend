@@ -5,9 +5,9 @@ from enum import Enum
 import bcrypt
 import jwt
 
-from config import settings
-from database.models import User
-from schemas.jwt import TokenInfo
+from habit_tasks.config import settings
+from habit_tasks.database.models import User
+from habit_tasks.schemas.jwt import TokenInfo
 
 
 class TokenType(str, Enum):

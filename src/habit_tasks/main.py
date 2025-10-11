@@ -1,11 +1,11 @@
 from contextlib import asynccontextmanager
 
+import api
 import uvicorn
 from fastapi import FastAPI
 
-import api
-from config import settings
-from database import database_helper
+from habit_tasks.config import settings
+from habit_tasks.database import database_helper
 
 
 @asynccontextmanager

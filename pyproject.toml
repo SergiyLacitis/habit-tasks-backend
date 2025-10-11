@@ -25,5 +25,12 @@ include = ["src", "tests"]
 venvPath = "."
 venv = ".venv"
 
+[tool.ruff]
+include = ["pyproject.toml", "src/**/*.py", "tests/**/*.py",]
+
 [tool.ruff.lint]
 extend-select = ["FAST001", "FAST002", "FAST003"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

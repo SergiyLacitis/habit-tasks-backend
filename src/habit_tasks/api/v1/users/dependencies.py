@@ -4,9 +4,9 @@ from fastapi import HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 
-from database import AsyncDBSessionDep
-from database.models import User
-from schemas.user import UserCreate
+from habit_tasks.database import AsyncDBSessionDep
+from habit_tasks.database.models import User
+from habit_tasks.schemas.user import UserCreate
 
 
 async def get_user_by_id(session: AsyncDBSessionDep, id: int) -> User:

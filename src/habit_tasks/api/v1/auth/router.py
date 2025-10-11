@@ -2,10 +2,10 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends
 
-from api.v1.users.dependencies import add_user
-from database.models import User
-from schemas.jwt import TokenInfo
-from schemas.user import UserRead
+from habit_tasks.api.v1.users.dependencies import add_user
+from habit_tasks.database.models import User
+from habit_tasks.schemas.jwt import TokenInfo
+from habit_tasks.schemas.user import UserRead
 
 from .dependencies import (
     get_auth_user_from_access_token,

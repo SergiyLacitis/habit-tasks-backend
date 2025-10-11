@@ -4,8 +4,8 @@ from typing import Annotated
 from fastapi import Depends
 from fastapi.routing import APIRouter
 
-from database.models.user import User
-from schemas.user import UserRead
+from habit_tasks.database.models.user import User
+from habit_tasks.schemas.user import UserRead
 
 from .dependencies import add_user, get_all_users, get_user_by_id
 

@@ -5,9 +5,9 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jwt.exceptions import InvalidTokenError
 from sqlalchemy import select
 
-from config import settings
-from database import AsyncDBSessionDep
-from database.models import User
+from habit_tasks.config import settings
+from habit_tasks.database import AsyncDBSessionDep
+from habit_tasks.database.models import User
 
 from . import utils
 from .exceptions import (
