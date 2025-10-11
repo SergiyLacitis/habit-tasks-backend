@@ -14,3 +14,5 @@ config.toml
 
 # Keys
 certs/
+
+.pytest_chache/
