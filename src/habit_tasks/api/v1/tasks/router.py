@@ -1,6 +1,7 @@
+from datetime import date
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, Query, status
 
 from habit_tasks.api.v1.auth.dependencies import get_auth_user_from_access_token
 from habit_tasks.database import AsyncDBSessionDep
@@ -17,7 +18,9 @@ from .dependencies import (
     create_task,
     delete_task_logic,
     get_task_by_id,
+    get_task_logs_logic,
     get_user_tasks,
+    undo_complete_task_logic,
     update_task_logic,
 )
 
@@ -71,6 +74,17 @@ async def delete_task(
     await delete_task_logic(session, user, task_id)
 
 
+@router.get("/{task_id}/logs", response_model=list[TaskLogResponse])
+async def get_task_history(
+    task_id: int,
+    session: AsyncDBSessionDep,
+    user: CurrentUser,
+    date_from: Annotated[date | None, Query(description="Start date filter")] = None,
+    date_to: Annotated[date | None, Query(description="End date filter")] = None,
+):
+    return await get_task_logs_logic(session, user, task_id, date_from, date_to)
+
+
 @router.post("/{task_id}/complete", response_model=TaskLogResponse)
 async def complete_task(
     task_id: int,
@@ -78,3 +92,15 @@ async def complete_task(
     user: CurrentUser,
 ):
     return await complete_task_logic(session, user, task_id)
+
+
+@router.delete("/{task_id}/complete", status_code=status.HTTP_204_NO_CONTENT)
+async def undo_complete_task(
+    task_id: int,
+    session: AsyncDBSessionDep,
+    user: CurrentUser,
+    date: Annotated[
+        date | None, Query(description="Date to undo (defaults to today)")
+    ] = None,
+):
+    await undo_complete_task_logic(session, user, task_id, date)

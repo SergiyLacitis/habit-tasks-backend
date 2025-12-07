@@ -22,7 +22,7 @@ async def get_all_users(session: AsyncDBSessionDep) -> Sequence[User]:
     return result.all()
 
 
-async def add_user(
+async def create_user_in_db(
     session: AsyncDBSessionDep,
     user_create: UserCreate,
 ) -> User:
@@ -43,3 +43,10 @@ async def add_user(
             status_code=status.HTTP_409_CONFLICT,
             detail="User with that username or email already exists",
         )
+
+
+async def add_user(
+    session: AsyncDBSessionDep,
+    user_create: UserCreate,
+) -> User:
+    return await create_user_in_db(session, user_create)

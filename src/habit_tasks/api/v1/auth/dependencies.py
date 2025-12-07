@@ -1,12 +1,13 @@
 from typing import Annotated
 
-from fastapi import Depends
+from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jwt.exceptions import InvalidTokenError
 from sqlalchemy import select
 
 from habit_tasks.database import AsyncDBSessionDep
 from habit_tasks.database.models import User
+from habit_tasks.database.models.user import UserRole
 
 from . import utils
 from .exceptions import (
@@ -80,3 +81,14 @@ async def get_auth_user_from_refresh_token(
     session: AsyncDBSessionDep,
 ) -> User:
     return await get_auth_user_from_token(payload, session, utils.TokenType.REFRESH)
+
+
+async def get_current_admin_user(
+    current_user: Annotated[User, Depends(get_auth_user_from_access_token)],
+) -> User:
+    if current_user.role != UserRole.ADMIN:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="The user doesn't have enough privileges (Admin role required)",
+        )
+    return current_user
