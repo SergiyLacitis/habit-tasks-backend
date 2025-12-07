@@ -28,7 +28,6 @@ async def get_user_tasks(
     tasks_with_status = []
     for task, log_id in result:
         task_dto = TaskResponse.model_validate(task)
-        # Записуємо статус у поле is_completed
         task_dto.is_completed = log_id is not None
         tasks_with_status.append(task_dto)
 
