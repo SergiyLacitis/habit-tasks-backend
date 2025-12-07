@@ -1,11 +1,19 @@
-from sqlalchemy.dialects.postgresql import BYTEA
-from sqlalchemy.orm import Mapped, mapped_column
+from __future__ import annotations
+
+from sqlalchemy import String
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .base import Base
 from .mixins import IntIDPkMixin
 
 
 class User(Base, IntIDPkMixin):
-    email: Mapped[str] = mapped_column(unique=True)
     username: Mapped[str] = mapped_column(unique=True)
-    password: Mapped[bytes] = mapped_column(BYTEA, nullable=False)
+    email: Mapped[str] = mapped_column(
+        String(255), unique=True, index=True, nullable=False
+    )
+    password_hash: Mapped[str] = mapped_column(String, nullable=False)
+
+    tasks: Mapped[list["Task"]] = relationship(
+        "Task", back_populates="user", cascade="all, delete-orphan"
+    )

@@ -51,7 +51,7 @@ url = URL.create(
     port=settings.database.port,
     database=settings.database.name,
 ).render_as_string(hide_password=False)
-
+print(url)
 database_helper = DatabaseHelper(
     url=url,
     echo=settings.database.engine.echo,

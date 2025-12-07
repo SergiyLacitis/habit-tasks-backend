@@ -1,6 +1,6 @@
 from .base import Base
-from .event import Event
-from .friend import Friend
+from .task import Task
+from .task_log import TaskLog
 from .user import User
 
-__all__ = ["Base", "Event", "Friend", "User"]
+__all__ = ["Base", "Task", "TaskLog", "User"]
