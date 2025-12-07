@@ -1,8 +1,7 @@
 from collections.abc import Sequence
 from typing import Annotated
 
-from fastapi import Depends
-from fastapi.routing import APIRouter
+from fastapi import APIRouter, Depends
 
 from habit_tasks.database.models.user import User
 from habit_tasks.schemas.user import UserRead

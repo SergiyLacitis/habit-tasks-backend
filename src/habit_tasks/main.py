@@ -1,9 +1,9 @@
 from contextlib import asynccontextmanager
 
-import api
 import uvicorn
 from fastapi import FastAPI
 
+from habit_tasks import api
 from habit_tasks.config import settings
 from habit_tasks.database import database_helper
 
@@ -21,7 +21,7 @@ app.include_router(router=api.router)
 
 def main():
     uvicorn.run(
-        "main:app",
+        "habit_tasks.main:app",
         reload=settings.app.reload,
         host=settings.app.host,
         port=settings.app.port,

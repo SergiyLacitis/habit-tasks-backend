@@ -17,7 +17,7 @@ class Task(Base, IntIDPkMixin):
     reminders: Mapped[list | None] = mapped_column(JSON, nullable=True)
 
     created_at: Mapped[datetime] = mapped_column(
-        DateTime, default=lambda: datetime.now(timezone.utc)
+        DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)
     )
     user: Mapped["User"] = relationship("User", back_populates="tasks")
     logs: Mapped[list["TaskLog"]] = relationship(

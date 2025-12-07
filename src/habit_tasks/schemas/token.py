@@ -7,4 +7,11 @@ class Token(BaseModel):
 
 
 class TokenPayload(BaseModel):
-    sub: int | None = None
+    sub: str | None = None
+    type: str | None = None
+
+
+class TokenInfo(BaseModel):
+    access_token: str
+    refresh_token: str | None = None
+    token_type: str = "Bearer"
