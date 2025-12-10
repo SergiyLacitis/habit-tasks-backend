@@ -20,8 +20,7 @@ jobs:
           POSTGRES_DB: habit_test_db
         ports:
           - 5432:5432
-        options: >-
-          --health-cmd pg_isready
+        options: --health-cmd pg_isready
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
@@ -47,6 +46,7 @@ jobs:
         uses: astral-sh/setup-uv@v4
         with:
           version: "0.5.11"
+          enable-cache: true
 
       - name: Set up Python
         run: uv python install 3.12
@@ -54,11 +54,12 @@ jobs:
       - name: Install dependencies
         run: uv sync --all-extras --dev
 
-      - name: Generate dummy JWT keys for testing
+      - name: Generate dummy JWT keys
         run: |
           mkdir -p src/habit_tasks/certs/jwt
           openssl genrsa -out src/habit_tasks/certs/jwt/private.pem 2048
           openssl rsa -in src/habit_tasks/certs/jwt/private.pem -pubout -out src/habit_tasks/certs/jwt/public.pem
+          echo "Keys generated successfully at src/habit_tasks/certs/jwt/"
 
       - name: Run Linting (Ruff)
         run: uv run ruff check .
