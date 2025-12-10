@@ -1,12 +1,16 @@
 from __future__ import annotations
 
 from datetime import date as DateType
+from typing import TYPE_CHECKING
 
 from sqlalchemy import Boolean, Date, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .base import Base
 from .mixins import IntIDPkMixin
+
+if TYPE_CHECKING:
+    from .task import Task
 
 
 class TaskLog(Base, IntIDPkMixin):
