@@ -18,7 +18,6 @@ class Task(Base, IntIDPkMixin):
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"))
     title: Mapped[str] = mapped_column(String(100), index=True, nullable=False)
     description: Mapped[str | None] = mapped_column(String(500), nullable=True)
-    frequency: Mapped[str | None] = mapped_column(String(50))
     reminders: Mapped[list | None] = mapped_column(JSON, nullable=True)
 
     created_at: Mapped[datetime] = mapped_column(
