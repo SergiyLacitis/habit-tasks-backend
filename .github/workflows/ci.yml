@@ -1,0 +1,73 @@
+name: CI
+
+on:
+  push:
+    branches: ["main", "master"]
+  pull_request:
+    branches: ["main", "master"]
+
+jobs:
+  test:
+    name: Run Tests & Lints
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: admin
+          POSTGRES_PASSWORD: admin123
+          POSTGRES_DB: habit_test_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DATABASE__HOST: localhost
+      DATABASE__PORT: 5432
+      DATABASE__USER: admin
+      DATABASE__PASSWORD: admin123
+      DATABASE__NAME: habit_test_db
+      DATABASE__ENGINE__NAME: postgresql
+      DATABASE__ENGINE__ECHO: false
+      DATABASE__ENGINE__ECHO_POOL: false
+      DATABASE__ENGINE__POOL_SIZE: 5
+      DATABASE__ENGINE__MAX_OVERFLOW: 10
+      PYTHONPATH: src
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+        with:
+          version: "0.5.11"
+
+      - name: Set up Python
+        run: uv python install 3.12
+
+      - name: Install dependencies
+        run: uv sync --all-extras --dev
+
+      - name: Generate dummy JWT keys for testing
+        run: |
+          mkdir -p src/habit_tasks/certs/jwt
+          openssl genrsa -out src/habit_tasks/certs/jwt/private.pem 2048
+          openssl rsa -in src/habit_tasks/certs/jwt/private.pem -pubout -out src/habit_tasks/certs/jwt/public.pem
+
+      - name: Run Linting (Ruff)
+        run: uv run ruff check .
+
+      - name: Run Formatting Check (Ruff)
+        run: uv run ruff format --check .
+
+      - name: Run Type Checking (Pyright)
+        run: uv run pyright
+
+      - name: Run Tests (Pytest)
+        run: uv run pytest
