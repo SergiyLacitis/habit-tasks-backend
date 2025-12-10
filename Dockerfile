@@ -4,5 +4,6 @@ WORKDIR /app
 COPY pyproject.toml uv.lock ./
 RUN uv sync --locked
 COPY src ./src
+ENV PYTHONPATH=/app/src
 EXPOSE 8000
-CMD ["uv", "run", "src/main.py"]
+CMD ["uv", "run", "-m", "habit_tasks.main"]

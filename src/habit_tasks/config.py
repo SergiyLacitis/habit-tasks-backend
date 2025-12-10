@@ -59,6 +59,7 @@ class Settings(BaseSettings):
     auth: AuthSettings = Field(default_factory=AuthSettings)
     model_config = SettingsConfigDict(
         toml_file=BASE_DIR / "config.toml",
+        env_nested_delimiter="__",
     )
 
     @classmethod
@@ -70,7 +71,10 @@ class Settings(BaseSettings):
         dotenv_settings: PydanticBaseSettingsSource,
         file_secret_settings: PydanticBaseSettingsSource,
     ) -> tuple[PydanticBaseSettingsSource, ...]:
-        return (TomlConfigSettingsSource(settings_cls),)
+        return (
+            env_settings,
+            TomlConfigSettingsSource(settings_cls),
+        )
 
 
 settings = Settings()  # pyright: ignore[reportCallIssue]
