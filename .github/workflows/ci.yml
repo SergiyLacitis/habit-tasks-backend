@@ -20,7 +20,8 @@ jobs:
           POSTGRES_DB: habit_test_db
         ports:
           - 5432:5432
-        options: --health-cmd pg_isready
+        options: >-
+          --health-cmd pg_isready
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
@@ -36,6 +37,10 @@ jobs:
       DATABASE__ENGINE__ECHO_POOL: false
       DATABASE__ENGINE__POOL_SIZE: 5
       DATABASE__ENGINE__MAX_OVERFLOW: 10
+      APP__HOST: "127.0.0.1"
+      APP__PORT: 8000
+      APP__RELOAD: "false"
+
       PYTHONPATH: src
 
     steps:
@@ -59,7 +64,6 @@ jobs:
           mkdir -p src/habit_tasks/certs/jwt
           openssl genrsa -out src/habit_tasks/certs/jwt/private.pem 2048
           openssl rsa -in src/habit_tasks/certs/jwt/private.pem -pubout -out src/habit_tasks/certs/jwt/public.pem
-          echo "Keys generated successfully at src/habit_tasks/certs/jwt/"
 
       - name: Run Linting (Ruff)
         run: uv run ruff check .
