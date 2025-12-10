@@ -1,14 +1,13 @@
 from datetime import datetime
-from typing import Optional
 
 from pydantic import BaseModel, ConfigDict, Field
 
 
 class TaskBase(BaseModel):
     title: str = Field(min_length=1, max_length=100)
-    description: Optional[str] = Field(default=None, max_length=500)
-    frequency: Optional[str] = Field(default=None, max_length=50)
-    reminders: Optional[list[str]] = None
+    description: str | None = Field(default=None, max_length=500)
+    frequency: str | None = Field(default=None, max_length=50)
+    reminders: list[str] | None = None
 
 
 class TaskCreate(TaskBase):
@@ -16,10 +15,10 @@ class TaskCreate(TaskBase):
 
 
 class TaskUpdate(BaseModel):
-    title: Optional[str] = Field(default=None, min_length=1, max_length=100)
-    description: Optional[str] = Field(default=None, max_length=500)
-    frequency: Optional[str] = Field(default=None, max_length=50)
-    reminders: Optional[list[str]] = None
+    title: str | None = Field(default=None, min_length=1, max_length=100)
+    description: str | None = Field(default=None, max_length=500)
+    frequency: str | None = Field(default=None, max_length=50)
+    reminders: list[str] | None = None
 
 
 class TaskResponse(TaskBase):
